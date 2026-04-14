@@ -32,6 +32,8 @@ body {
   display: flex;
   align-items: center;
   gap: 10px;
+  width: 100%;
+  justify-content: center;
 }
 
 .cisco-logo {
@@ -46,27 +48,33 @@ body {
 }
 
 /* ── Display Area ───────────────────────────────────────────── */
+/* 
+  KEY FIX: Set width to 100% so the display area spans the full 
+  container width, matching the dial pad grid below it exactly.
+*/
 .display-area {
   display: flex;
   align-items: center;
-  width: 100%;
+  width: 100%;               /* Matches full container width */
   gap: 8px;
 }
 
 .dial-display {
-  flex: 1;
-  padding: 12px 14px;
+  flex: 1;                   /* Takes all available space, leaving room for backspace btn */
+  min-width: 0;              /* Prevents flex overflow on smaller widths */
+  padding: 14px 16px;
   font-size: 1.4rem;
   font-weight: 500;
   letter-spacing: 0.1em;
   border: 2px solid #d1d1d1;
-  border-radius: 10px;
+  border-radius: 12px;
   background: #f9f9f9;
   color: #1a1a2e;
   text-align: center;
   outline: none;
   cursor: default;
   transition: border-color 0.2s;
+  width: 100%;               /* Ensure it fills its flex space */
 }
 
 .dial-display:focus {
@@ -77,12 +85,16 @@ body {
   background: #f3f2f1;
   border: 2px solid #d1d1d1;
   border-radius: 10px;
-  width: 44px;
-  height: 50px;
+  width: 44px;               /* Fixed width for backspace button */
+  height: 52px;              /* Matches the input field height */
+  flex-shrink: 0;            /* Prevents the button from shrinking */
   font-size: 1.2rem;
   cursor: pointer;
   color: #555;
   transition: background 0.2s, border-color 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .clear-btn:hover {
@@ -92,11 +104,15 @@ body {
 }
 
 /* ── Dial Pad Grid ──────────────────────────────────────────── */
+/*
+  KEY FIX: Set width to 100% so the grid fills the container
+  and aligns perfectly with the display field above.
+*/
 .dialpad-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 12px;
-  width: 100%;
+  width: 100%;               /* Fills full container width */
 }
 
 .pad-btn {
@@ -107,13 +123,14 @@ body {
   background: #f3f2f1;
   border: 2px solid #e0e0e0;
   border-radius: 12px;
-  padding: 12px 0;
+  padding: 16px 0;           /* Slightly more padding for a balanced look */
   font-size: 1.4rem;
   font-weight: 600;
   color: #1a1a2e;
   cursor: pointer;
   transition: background 0.15s, border-color 0.15s, transform 0.1s;
   user-select: none;
+  width: 100%;               /* Each button fills its grid cell */
 }
 
 .pad-btn:hover {
@@ -137,15 +154,19 @@ body {
 }
 
 /* ── Dial Button ────────────────────────────────────────────── */
+/*
+  KEY FIX: Match the dial button width to the grid and display 
+  area — use 100% to span the full container consistently.
+*/
 .dial-btn {
-  width: 100%;
-  padding: 14px;
+  width: 100%;               /* Full container width, aligned with grid */
+  padding: 16px;
   font-size: 1.1rem;
   font-weight: 700;
   background: #0070D2;
   color: #ffffff;
   border: none;
-  border-radius: 12px;
+  border-radius: 30px;       /* Pill shape to match the screenshot */
   cursor: pointer;
   letter-spacing: 0.05em;
   transition: background 0.2s, transform 0.1s;
@@ -172,6 +193,7 @@ body {
   text-align: center;
   color: #555;
   transition: color 0.2s;
+  width: 100%;
 }
 
 .status-msg.success {
