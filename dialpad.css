@@ -1,0 +1,185 @@
+/* ── Reset & Base ───────────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f3f2f1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+/* ── Container ──────────────────────────────────────────────── */
+.dialpad-container {
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.12);
+  padding: 28px 24px;
+  width: 320px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+}
+
+/* ── Header ─────────────────────────────────────────────────── */
+.dialpad-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.cisco-logo {
+  width: 28px;
+  height: 28px;
+}
+
+.dialpad-header h2 {
+  font-size: 1.2rem;
+  color: #1a1a2e;
+  font-weight: 600;
+}
+
+/* ── Display Area ───────────────────────────────────────────── */
+.display-area {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  gap: 8px;
+}
+
+.dial-display {
+  flex: 1;
+  padding: 12px 14px;
+  font-size: 1.4rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  border: 2px solid #d1d1d1;
+  border-radius: 10px;
+  background: #f9f9f9;
+  color: #1a1a2e;
+  text-align: center;
+  outline: none;
+  cursor: default;
+  transition: border-color 0.2s;
+}
+
+.dial-display:focus {
+  border-color: #0070D2;
+}
+
+.clear-btn {
+  background: #f3f2f1;
+  border: 2px solid #d1d1d1;
+  border-radius: 10px;
+  width: 44px;
+  height: 50px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  color: #555;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.clear-btn:hover {
+  background: #ffe0e0;
+  border-color: #e53935;
+  color: #e53935;
+}
+
+/* ── Dial Pad Grid ──────────────────────────────────────────── */
+.dialpad-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  width: 100%;
+}
+
+.pad-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: #f3f2f1;
+  border: 2px solid #e0e0e0;
+  border-radius: 12px;
+  padding: 12px 0;
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #1a1a2e;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, transform 0.1s;
+  user-select: none;
+}
+
+.pad-btn:hover {
+  background: #e8f4fd;
+  border-color: #0070D2;
+  color: #0070D2;
+}
+
+.pad-btn:active {
+  transform: scale(0.94);
+  background: #cce4f6;
+}
+
+.sub-label {
+  font-size: 0.5rem;
+  font-weight: 400;
+  color: #888;
+  letter-spacing: 0.08em;
+  margin-top: 2px;
+  min-height: 10px;
+}
+
+/* ── Dial Button ────────────────────────────────────────────── */
+.dial-btn {
+  width: 100%;
+  padding: 14px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  background: #0070D2;
+  color: #ffffff;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  letter-spacing: 0.05em;
+  transition: background 0.2s, transform 0.1s;
+}
+
+.dial-btn:hover {
+  background: #005aac;
+}
+
+.dial-btn:active {
+  transform: scale(0.97);
+  background: #004a8f;
+}
+
+.dial-btn:disabled {
+  background: #b0bec5;
+  cursor: not-allowed;
+}
+
+/* ── Status Message ─────────────────────────────────────────── */
+.status-msg {
+  font-size: 0.85rem;
+  min-height: 20px;
+  text-align: center;
+  color: #555;
+  transition: color 0.2s;
+}
+
+.status-msg.success {
+  color: #2e7d32;
+  font-weight: 600;
+}
+
+.status-msg.error {
+  color: #c62828;
+  font-weight: 600;
+}
