@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Cisco Dial Pad</title>
+  <link rel="stylesheet" href="dialpad.css" />
+  <!-- Microsoft Teams JavaScript SDK -->
+  <script src="https://res.cdn.office.net/teams-js/2.22.0/js/MicrosoftTeams.min.js"></script>
+  <script src="dialpad.js" defer></script>
+</head>
+<body>
+  <div class="dialpad-container">
+
+    <!-- Header -->
+    <div class="dialpad-header">
+      <img src="https://www.cisco.com/favicon.ico" alt="Cisco Logo" class="cisco-logo"/>
+      <h2>Cisco Dial Pad</h2>
+    </div>
+
+    <!-- Display -->
+    <div class="display-area">
+      <input
+        type="text"
+        id="dialDisplay"
+        class="dial-display"
+        placeholder="Enter number..."
+        maxlength="30"
+        readonly
+        aria-label="Dialed number display"
+      />
+      <button id="clearBtn" class="clear-btn" title="Clear last digit" aria-label="Delete last digit">
+        &#9003;
+      </button>
+    </div>
+
+    <!-- Dial Pad Grid -->
+    <div class="dialpad-grid" id="dialpadGrid" role="group" aria-label="Dial pad buttons">
+      <!-- Row 1 -->
+      <button class="pad-btn" data-value="1">1<span class="sub-label">&nbsp;</span></button>
+      <button class="pad-btn" data-value="2">2<span class="sub-label">ABC</span></button>
+      <button class="pad-btn" data-value="3">3<span class="sub-label">DEF</span></button>
+      <!-- Row 2 -->
+      <button class="pad-btn" data-value="4">4<span class="sub-label">GHI</span></button>
+      <button class="pad-btn" data-value="5">5<span class="sub-label">JKL</span></button>
+      <button class="pad-btn" data-value="6">6<span class="sub-label">MNO</span></button>
+      <!-- Row 3 -->
+      <button class="pad-btn" data-value="7">7<span class="sub-label">PQRS</span></button>
+      <button class="pad-btn" data-value="8">8<span class="sub-label">TUV</span></button>
+      <button class="pad-btn" data-value="9">9<span class="sub-label">WXYZ</span></button>
+      <!-- Row 4 -->
+      <button class="pad-btn" data-value="*">*</button>
+      <button class="pad-btn" data-value="0">0<span class="sub-label">+</span></button>
+      <button class="pad-btn" data-value="#">#</button>
+    </div>
+
+    <!-- Dial Button -->
+    <button id="dialBtn" class="dial-btn" aria-label="Dial the entered number">
+      📞 Dial
+    </button>
+
+    <!-- Status Message -->
+    <div id="statusMsg" class="status-msg" role="alert" aria-live="polite"></div>
+
+  </div>
+</body>
+</html>
