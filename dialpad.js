@@ -15,20 +15,26 @@
   const dialpadGrid  = document.getElementById('dialpadGrid');
   const statusMsg    = document.getElementById('statusMsg');
 
-  // ── Allowed input characters ──────────────────────────────────
-  const ALLOWED_CHARS = /^[0-9*#+]$/;
-  const MAX_LENGTH    = 30;
+  // ── Constants ─────────────────────────────────────────────────
+  const ALLOWED_CHARS         = /^[0-9*#+]$/;
+  const ALLOWED_CHARS_GLOBAL  = /[^0-9*#+]/g;  // Used to strip invalid chars from pasted input
+  const MAX_LENGTH            = 30;
 
   // ── Utility: Set status message ───────────────────────────────
   function setStatus(message, type = '') {
-    statusMsg.textContent  = message;
-    statusMsg.className    = `status-msg ${type}`;
+    statusMsg.textContent = message;
+    statusMsg.className   = `status-msg ${type}`;
     if (message) {
       setTimeout(() => {
         statusMsg.textContent = '';
         statusMsg.className   = 'status-msg';
       }, 4000);
     }
+  }
+
+  // ── Utility: Sanitize a raw string to only allowed characters ─
+  function sanitizeInput(raw) {
+    return raw.replace(ALLOWED_CHARS_GLOBAL, '');
   }
 
   // ── Append digit to display ───────────────────────────────────
@@ -56,14 +62,12 @@
       return;
     }
 
-    // Encode the number safely for use in a URL
     const encodedNumber = encodeURIComponent(sanitized);
     const ciscotelUrl   = `CISCOTEL:${encodedNumber}`;
 
     try {
-      // Use an invisible anchor to trigger the protocol handler
-      const anchor    = document.createElement('a');
-      anchor.href     = ciscotelUrl;
+      const anchor         = document.createElement('a');
+      anchor.href          = ciscotelUrl;
       anchor.style.display = 'none';
       document.body.appendChild(anchor);
       anchor.click();
@@ -93,16 +97,81 @@
     invokeCiscoTel(dialDisplay.value);
   });
 
-  // ── Event: Physical keyboard input ───────────────────────────
-  document.addEventListener('keydown', (event) => {
+  // ── Event: Paste handler ──────────────────────────────────────
+  // Intercepts paste, strips all non-dialable characters, and
+  // inserts only the sanitized result — respecting MAX_LENGTH.
+  dialDisplay.addEventListener('paste', (event) => {
+    event.preventDefault();   // Block the default paste behaviour
+
+    const raw       = (event.clipboardData || window.clipboardData).getData('text');
+    const cleaned   = sanitizeInput(raw);
+
+    if (!cleaned) {
+      setStatus('Clipboard content contains no dialable characters.', 'error');
+      return;
+    }
+
+    // Respect max length: only take as many chars as still fit
+    const remaining     = MAX_LENGTH - dialDisplay.value.length;
+    const toInsert      = cleaned.slice(0, remaining);
+    const wasClipped    = cleaned.length > remaining;
+
+    // Insert at the current cursor position rather than always appending
+    const start = dialDisplay.selectionStart;
+    const end   = dialDisplay.selectionEnd;
+    const current = dialDisplay.value;
+
+    dialDisplay.value = current.slice(0, start) + toInsert + current.slice(end);
+
+    // Restore cursor position after the inserted text
+    const newCursorPos = start + toInsert.length;
+    dialDisplay.setSelectionRange(newCursorPos, newCursorPos);
+
+    if (wasClipped) {
+      setStatus(`Number trimmed to ${MAX_LENGTH} digits maximum.`, 'error');
+    } else {
+      setStatus(`Pasted: ${toInsert}`, 'success');
+    }
+
+    console.log(`[DialPad] Pasted raw: "${raw}" → sanitized: "${toInsert}"`);
+  });
+
+  // ── Event: Direct typing / input sanitization ─────────────────
+  // Since readonly is removed, users can also type directly into
+  // the field. This ensures only allowed characters are accepted.
+  dialDisplay.addEventListener('keydown', (event) => {
     const key = event.key;
 
-    if (ALLOWED_CHARS.test(key)) {
-      appendDigit(key);
-    } else if (key === 'Backspace') {
-      deleteLastChar();
-    } else if (key === 'Enter') {
-      invokeCiscoTel(dialDisplay.value);
+    // Allow control keys to function normally
+    const controlKeys = [
+      'Backspace', 'Delete', 'ArrowLeft', 'ArrowRight',
+      'ArrowUp', 'ArrowDown', 'Tab', 'Enter', 'Home', 'End'
+    ];
+
+    if (controlKeys.includes(key)) {
+      // Handle Enter to dial
+      if (key === 'Enter') {
+        event.preventDefault();
+        invokeCiscoTel(dialDisplay.value);
+      }
+      // Allow all other control keys (Backspace, arrows, etc.) to work natively
+      return;
+    }
+
+    // Allow Ctrl+A, Ctrl+C, Ctrl+V, Ctrl+X for clipboard operations
+    if (event.ctrlKey || event.metaKey) return;
+
+    // Block any character that is not in the allowed set
+    if (!ALLOWED_CHARS.test(key)) {
+      event.preventDefault();
+      setStatus(`"${key}" is not a valid dial character.`, 'error');
+      return;
+    }
+
+    // Enforce max length for direct typing
+    if (dialDisplay.value.length >= MAX_LENGTH) {
+      event.preventDefault();
+      setStatus('Maximum number length reached.', 'error');
     }
   });
 
